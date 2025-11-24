@@ -14,13 +14,13 @@
       style="margin: 0; padding: 0; height: 100dvh"
     ></div>
     <script type="module">
-      import { makeEmbed } from "dist/pyret.js";
+      import { makeEmbed } from "./dist/pyret.js";
       async function pyretEditor() {
         const iframeContainer = document.getElementById("pyret-container");
         const embed = await makeEmbed(
           "pyret-embed",
           iframeContainer,
-          "dist/build/web/editor.embed.html#hideFooter=true",
+          "./dist/build/web/editor.embed.html#hideFooter=true",
         );
 
         embed.sendReset({
