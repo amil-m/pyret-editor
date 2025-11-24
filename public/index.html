@@ -15,6 +15,47 @@
     ></div>
     <script type="module">
       import { makeEmbed } from "./dist/pyret.js";
+
+      function getDecodedIdFromHash() {
+        const hash = window.location.hash.substring(1);
+
+        if (!hash) return "";
+
+        const encodedId = hash.split("=")[1];
+
+        if (!encodedId) return "";
+
+        try {
+          return decodeUrlSafeBase64(encodedId);
+        } catch (e) {
+          console.error("Failed to decode:", e);
+          return "# Failed to decode";
+        }
+      }
+
+      function decodeUrlSafeBase64(str) {
+        // Convert URL-safe to standard base64
+        str = str.replace(/-/g, "+").replace(/_/g, "/");
+
+        // Add padding
+        while (str.length % 4) str += "=";
+
+        // Decode to bytes and convert to UTF-8
+        const bytes = Uint8Array.from(atob(str), (c) => c.charCodeAt(0));
+        return new TextDecoder().decode(bytes);
+      }
+
+      let initial_code = getDecodedIdFromHash();
+
+      // Automatically add context if missing
+      initial_code = initial_code.startsWith("use context")
+        ? intitial_code
+        : "use context starter2024\n\n" + initial_code;
+
+      // Get URL Parameter to check for micropip
+      const params = new URLSearchParams(document.location.search);
+      const run = params.get("run") == "1" ? true : false;
+
       async function pyretEditor() {
         const iframeContainer = document.getElementById("pyret-container");
         const embed = await makeEmbed(
@@ -24,9 +65,9 @@
         );
 
         embed.sendReset({
-          definitionsAtLastRun: "use context starter2024\n\n'Hello!'",
+          definitionsAtLastRun: run ? initial_code : null,
           interactionsSinceLastRun: [],
-          editorContents: "use context starter2024\n\n'Hello!'",
+          editorContents: initial_code,
           replContents: "",
         });
       }
