@@ -1,0 +1,36 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pyret Editor</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body style="margin: 0; padding: 0">
+    <div
+      id="pyret-container"
+      class="embed-container"
+      style="margin: 0; padding: 0; height: 100dvh"
+    ></div>
+    <script type="module">
+      import { makeEmbed } from "/dist/pyret.js";
+      async function pyretEditor() {
+        const iframeContainer = document.getElementById("pyret-container");
+        const embed = await makeEmbed(
+          "pyret-embed",
+          iframeContainer,
+          "/dist/build/web/editor.embed.html#hideFooter=true",
+        );
+
+        embed.sendReset({
+          definitionsAtLastRun: "use context starter2024\n\n'Hello!'",
+          interactionsSinceLastRun: [],
+          editorContents: "use context starter2024\n\n'Hello!'",
+          replContents: "",
+        });
+      }
+      pyretEditor();
+    </script>
+  </body>
+</html>
